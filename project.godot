@@ -16,3 +16,14 @@ boot_splash/bg_color=Color(0.145098, 0.137255, 0.145098, 1)
 boot_splash/image="res://dawngrove_logo.png"
 config/icon="res://icon.svg"
 run/main_sce=""
+
+[autoload]
+
+GodotLogger="*res://addons/logger/logger.gd"
+NetCache="*res://addons/p2p/helper/cache.gd"
+P2PNetwork="*res://addons/p2p/network/general/network.gd"
+P2PLobby="*res://addons/p2p/lobby/general/lobby.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/logger/plugin.cfg", "res://addons/p2p/plugin.cfg")

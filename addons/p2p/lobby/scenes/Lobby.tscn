@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://behdns46wlasf"]
+
+[ext_resource type="Script" path="res://addons/p2p/lobby/scenes/Lobby.gd" id="1_u63qa"]
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchor_right = 0.14
+anchor_bottom = 0.1
+offset_right = -0.760052
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u63qa")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Title"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Model" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Mode"
+horizontal_alignment = 1
+
+[node name="JoinLobby" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+action_mode = 0
+text = "Join Lobby"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+alignment = 1
+
+[node name="PlayJoinedProgres" type="ProgressBar" parent="VBoxContainer"]
+custom_minimum_size = Vector2(100, 10)
+layout_mode = 2
+max_value = 10.0
+value = 5.0
+rounded = true
+show_percentage = false

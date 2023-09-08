@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwq0ptf6gna1c"]
+
+[ext_resource type="Script" path="res://addons/p2p/scene/p2pConfigMenu.gd" id="1_niu2a"]
+
+[node name="p2pConfigMenu" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_niu2a")
+
+[node name="options" type="OptionButton" parent="."]
+layout_mode = 2
+tooltip_text = "Select P2P Network Type"
+flat = true
+
+[connection signal="item_selected" from="options" to="." method="_on_options_item_selected"]
