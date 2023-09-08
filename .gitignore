@@ -1,0 +1,7 @@
+# Godot 4+ specific ignores
+.godot/
+**.import
+.idea
+exports/
+.vscode
+**.x86_64

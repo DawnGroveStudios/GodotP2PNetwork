@@ -1,0 +1,18 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="P2PNetwork"
+config/features=PackedStringArray("4.1", "Mobile")
+boot_splash/bg_color=Color(0.145098, 0.137255, 0.145098, 1)
+boot_splash/image="res://dawngrove_logo.png"
+config/icon="res://icon.svg"
+run/main_sce=""
