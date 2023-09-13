@@ -21,6 +21,7 @@ enum RPC_TYPE {
 	SERVER,
 	ALL,
 	SYNC,
+	ALL_INCLUDING_SELF,
 }
 
 enum SYNC_PRIORITY {
@@ -147,6 +148,8 @@ func rpc_sync(obj:Node,send_type:P2P_SEND_TYPE=P2P_SEND_TYPE.RELIABLE,peer:NetPe
 
 func rpc_method(method:Callable,rpc_type:RPC_TYPE=RPC_TYPE.ALL, send_type: P2P_SEND_TYPE = P2P_SEND_TYPE.RELIABLE):
 	if !P2PLobby.in_lobby():
+		if rpc_type == RPC_TYPE.ALL_INCLUDING_SELF:
+			method.call()
 		return true
 	return net_rpc(rpc_type,method.get_object(),null,method,send_type)
 
@@ -204,8 +207,12 @@ func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=C
 					continue
 				else:
 					_rpc(connected_peer.network_id,caller,method,send_type)
-				#threading.run(_rpc.bind(network_id,caller,method,send_type))
-			#args = method.get_bound_arguments()
+			return true
+		RPC_TYPE.ALL_INCLUDING_SELF:
+			if method == null:
+				return false
+			for connected_peer in connected_peers:
+				_rpc(connected_peer.network_id,caller,method,send_type)
 			return true
 		RPC_TYPE.SERVER:
 			if method == null:
@@ -382,15 +389,25 @@ func _execute_rpc(sender:NetPeer, path_cache_index: int, method: String, args: A
 	if not node.has_method(method):
 		GodotLogger.error("Node %s does not have a method %s" % [node.name, method])
 		return false
-	#if _get_callable(node,method)  != 0:
-	args.push_front(sender.network_id)
-	node.callv(method, args)
+	var expected_args = _get_callable(node,method)
+	if expected_args <= -1:
+		GodotLogger.error("failed getting method args",{"method":method,"args":args})
+		return false
+	if expected_args == args.size():
+		node.callv(method, args)
+	elif expected_args +1 == args.size():
+		args.push_front(sender.network_id)
+		node.callv(method, args)
+	else:
+		GodotLogger.error("expected args does not match recieved args",{"method":method,"args":args})
+		return false
 	return true
 
 func _get_callable(node:Node,method_name:String) ->int:
 	for method in node.get_method_list():
 		if method["name"] == method_name:
-			return node["args"].size()
+			GodotLogger.debug("callable methods",method)
+			return method["args"].size()
 	return -1
 
 func _handle_remove_node(payload:BasePayload,data:PackedByteArray) :

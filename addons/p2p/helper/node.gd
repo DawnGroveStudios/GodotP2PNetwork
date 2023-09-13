@@ -24,6 +24,8 @@ static func set_object_name(obj:Object,args:Array=[])->bool:
 	var data = [str(P2PNetwork.network_data.get_network_id()),str(obj.get_class()),str(random.randi()),n]
 	data.append_array(args)
 	obj.name = "_".join(data)
+	if !valid_name(obj):
+		obj.set_name.call_deferred("_".join(data))
 	return true
 
 static func valid_name(obj:Object) -> bool:
@@ -36,19 +38,19 @@ static func valid_name(obj:Object) -> bool:
 
 static func duplicate_object(obj:Node) ->bool:
 	var path = "%s:%s" % [obj.get_path().get_concatenated_names(),obj.get_path().get_concatenated_subnames()]
-	if P2PNetwork.network_name.search(obj.name) != null:
-		var parent = obj.get_parent()
-		if parent == null:
-			return false
-		var duplicate=false
-		for c in parent.get_children():
-			if c.name == obj.name:
-				if duplicate:
-					GodotLogger.info("found duplicate object:remove:",obj)
-				duplicate = true
+	if !valid_name(obj):
 		return false
-	obj.queue_free()
-	return true
+
+	var parent = obj.get_parent()
+	if parent == null:
+		return false
+	var duplicate=false
+	var duplicate_count = 0
+	for c in parent.get_children():
+		if c.name == obj.name:
+			duplicate = true
+			duplicate_count += 1
+	return duplicate_count > 1
 
 static func is_owner_of_object(obj:Object,or_server:bool=false) ->bool:
 	if !P2PLobby.in_lobby():

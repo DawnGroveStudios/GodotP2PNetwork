@@ -66,7 +66,7 @@ func set_player_data(key:String,value):
 	if emit_signal:
 		player_data[current_player_id][key] = value
 		emit_signal("player_data_updated",current_player_id,key)
-		P2PNetwork.net_rpc(P2PNetwork.RPC_TYPE.ALL,self,null,_set_player_data.bind(key,value))
+		P2PNetwork.rpc_method(_set_player_data.bind(key,value),P2PNetwork.RPC_TYPE.ALL)
 
 func _set_player_data(player_id:int,key:String,value):
 	if !P2PLobby.in_lobby():
@@ -92,7 +92,7 @@ func set_game_data(key:String,value):
 		game_data[key] = value
 		emit_signal("game_data_updated",key)
 	if P2PNetwork.network_data.is_server():
-		P2PNetwork.net_rpc(P2PNetwork.RPC_TYPE.ALL,self,null,set_game_data.bind(key,value))
+		P2PNetwork.net_rpc(P2PNetwork.RPC_TYPE.ALL_CLIENTS,self,null,set_game_data.bind(key,value))
 
 func get_game_data(key:String):
 	return game_data.get(key)

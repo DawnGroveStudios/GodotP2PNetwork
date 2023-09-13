@@ -21,8 +21,8 @@ run/main_sce=""
 
 GodotLogger="*res://addons/logger/logger.gd"
 NetCache="*res://addons/p2p/helper/cache.gd"
-P2PNetwork="*res://addons/p2p/network/general/network.gd"
-P2PLobby="*res://addons/p2p/lobby/general/lobby.gd"
+P2PNetwork="*res://addons/p2p/network/implementations/steam/network.gd"
+P2PLobby="*res://addons/p2p/lobby/implementations/steam/lobby.gd"
 
 [editor_plugins]
 

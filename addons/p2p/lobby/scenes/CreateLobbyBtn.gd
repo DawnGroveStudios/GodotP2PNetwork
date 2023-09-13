@@ -5,7 +5,7 @@ extends Button
 var max_players:int=4
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pressed.connect(P2PLobby.create_lobby.bind(LobbyData.new(0,"DGS - DDD",0,max_players)))
+	pressed.connect(P2PLobby.create_lobby.bind(LobbyData.new(0,"DGS - DDD",P2PLobby.LobbyType.LOBBY_TYPE_PUBLIC,max_players)))
 	P2PLobby.lobby_joined.connect(_joined_lobby)
 	P2PLobby.player_left_lobby.connect(_left_lobby)
 	pass

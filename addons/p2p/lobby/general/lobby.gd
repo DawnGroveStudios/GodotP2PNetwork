@@ -1,6 +1,12 @@
 extends Node
 
 class_name BaseLobby
+enum LobbyType {
+LOBBY_TYPE_PRIVATE = 0,
+LOBBY_TYPE_FRIENDS_ONLY = 1,
+LOBBY_TYPE_PUBLIC = 2,
+LOBBY_TYPE_INVISIBLE = 3,
+}
 
 signal player_joined_lobby(network_id)
 signal player_left_lobby(network_id)

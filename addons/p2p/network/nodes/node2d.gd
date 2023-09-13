@@ -12,9 +12,18 @@ var sync_success:bool
 #	"global_rotation",
 #	"global_rotation_degrees",
 #	]
+var whitelist:Array[String] = [
+	"velocity",
+	"motion_mode",
+	"rotation",
+	"position",
+	"global_position",
+	"global_rotation",
+	"global_rotation_degrees",
+	"network_id"
+]
+@export var sync_priority:P2PNetwork.SYNC_PRIORITY = P2PNetwork.SYNC_PRIORITY.LOW
 
-var _periodic_sync_timer=Timer.new()
-@export var default_periodic_sync_duration=1.0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	NetworkNodeHelper.set_object_name(self)
@@ -25,10 +34,7 @@ func _ready() -> void:
 	]
 	P2PNetwork.network_access.register_syncs(sync)
 	P2PNetwork.disconnect.connect(destroy)
-	_periodic_sync_timer.autostart = false
-	_periodic_sync_timer.one_shot = false
-	_periodic_sync_timer.timeout.connect(_periodic_sync_timeout)
-	add_child(_periodic_sync_timer)
+	P2PNetwork.periodic_sync.connect(_periodic_sync_timeout)
 	sync()
 
 func emit_signals() ->bool:
@@ -57,28 +63,10 @@ func sync():
 	else:
 		sync_success = true
 
-func start_periodic_sync(duration:float=default_periodic_sync_duration):
-	if !sync_success:
+func _periodic_sync_timeout(pri:BaseNetwork.SYNC_PRIORITY):
+	if sync_priority != pri && sync_success:
 		return
-	if !P2PLobby.in_lobby():
-		return
-	if !NetworkNodeHelper.is_owner_of_object(self):
-		return
-	if duration <= 0:
-		duration = default_periodic_sync_duration
-	_periodic_sync_timer.start(duration)
-
-func _periodic_sync_timeout():
-	if !P2PLobby.in_lobby():
-		_periodic_sync_timer.stop()
-		return
-	if !NetworkNodeHelper.is_owner_of_object(self):
-		_periodic_sync_timer.stop()
-		return
-	#func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=Callable(), send_type: int = 2) -> bool:
-	if !P2PNetwork.net_rpc(P2PNetwork.RPC_TYPE.SYNC,self,null,Callable(),P2PNetwork.P2P_SEND_TYPE.UNRELIABLE):
-		GodotLogger.error("failed syncing %s" % self.get_class())
-
+	sync()
 func _server_process(delta: float) -> void:
 	pass
 
@@ -113,3 +101,6 @@ func _physics_process(delta: float) -> void:
 		server_physics_process(delta)
 	else:
 		client_physics_process(delta)
+
+func add_whitelist(varName:String):
+	whitelist.append(varName)
