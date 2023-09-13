@@ -1,10 +1,10 @@
 # GodotP2PNetwork
 
 ## Summary
-This plugin adds a network/lobby layer over existing networking infrastructure. Currently we Support
-- [Github](https://github.com/CoaguCo-Industries/GodotSteam)
+GodotP2PNetwork adds a network/lobby layer over existing networking infrastructure. Currently we Support
+- [https://github.com/CoaguCo-Industries/GodotSteam](https://github.com/CoaguCo-Industries/GodotSteam)
 
-We Plan to support
+#### Future Plans to Support:
 - Native Godot Networking
 - Peer to Peer Proxy server
 	- To avoid having players have to port forward to play with friends
@@ -13,13 +13,13 @@ We Plan to support
 ## Plugins
 ### Required
 - GodotLogger
-	- [Github](https://github.com/DawnGroveStudios/GodotLogger)
+	- [https://github.com/DawnGroveStudios/GodotLogger](https://github.com/DawnGroveStudios/GodotLogger)
 	- [AssetStore]()
 
 ### Optional - Highly recommend since this is the only working Networking layer currently
 - Steam
-	- [Github](https://github.com/CoaguCo-Industries/GodotSteam)
-	- [GodotSteam](https://godotsteam.com/)
+	- [https://github.com/CoaguCo-Industries/GodotSteam](https://github.com/CoaguCo-Industries/GodotSteam)
+	- [https://godotsteam.com/](https://godotsteam.com/)
 
 
 ## Features
