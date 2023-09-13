@@ -74,10 +74,10 @@ func sync():
 	else:
 		sync_success = true
 
-func _server_process(delta: float) -> void:
+func server_process(delta: float) -> void:
 	pass
 
-func _client_process(delta: float) -> void:
+func client_process(delta: float) -> void:
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -87,9 +87,9 @@ func _process(delta: float) -> void:
 	if !P2PLobby.in_lobby():
 		return
 	if NetworkNodeHelper.is_owner_of_object(self) and !(!P2PNetwork.network_data.is_server() and server_only):
-		_server_process(delta)
+		server_process(delta)
 	else:
-		_client_process(delta)
+		client_process(delta)
 
 func server_physics_process(delta: float) -> void:
 	pass

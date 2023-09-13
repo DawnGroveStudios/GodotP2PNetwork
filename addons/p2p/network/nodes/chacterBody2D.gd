@@ -104,7 +104,7 @@ func _periodic_sync_timeout(pri:BaseNetwork.SYNC_PRIORITY):
 		return
 	sync()
 
-func _server_process(delta: float) -> void:
+func server_process(delta: float) -> void:
 	return
 
 	#_current_time += delta
@@ -112,22 +112,22 @@ func _server_process(delta: float) -> void:
 		#P2PNetwork.rpc_sync(self,P2PNetwork.P2P_SEND_TYPE.UNRELIABLE_NO_DELAY)
 		#_current_time = 0
 
-func _client_process(delta: float) -> void:
+func client_process(delta: float) -> void:
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if !P2PLobby.in_lobby():
-		_server_process(delta)
+		server_process(delta)
 		return
 	if !sync_success:
 		#if NetworkNodeHelper.is_owner_of_object(self):
 		#	sync()
 		return
 	if NetworkNodeHelper.is_owner_of_object(self):
-		_server_process(delta)
+		server_process(delta)
 	else:
-		_client_process(delta)
+		client_process(delta)
 
 func server_physics_process(delta: float) -> void:
 	pass
