@@ -1,6 +1,6 @@
 extends Node
 
-var _test_logger:Log=GodotLogger.with("[TEST]")
+var _test_logger:Log=NetLog.with("[TEST]")
 var testing_name="default"
 # Called when the node enters the scene tree for the first time.
 func _ready():

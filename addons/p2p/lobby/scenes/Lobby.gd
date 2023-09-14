@@ -25,5 +25,4 @@ func set_model(model:String):
 	$VBoxContainer/HBoxContainer/Model.text = model
 
 func join():
-	#SteamLobby.join_lobby(lobby_id)
 	pass

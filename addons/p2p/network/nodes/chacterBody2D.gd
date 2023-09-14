@@ -52,7 +52,7 @@ func _recived_obj(network_id,path):
 		return
 	if path == get_path():
 		_recieved = true
-		GodotLogger.info("recieved obj")
+		NetLog.info("recieved obj")
 
 func add_whitelist(varName:String):
 	whitelist.append(varName)

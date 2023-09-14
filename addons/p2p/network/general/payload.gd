@@ -100,7 +100,7 @@ func broadcast_p2p_packet(my_network_id:int, peers:Array, send_type: int = 2, ch
 # todo send_p2p_packet make this not dependant on steam
 func send_p2p_packet(my_network_id, send_type: int = 2, channel: int = 0) -> bool:
 	if get_type() < 0:
-		GodotLogger.error("invalid packet type",{"type":get_type()})
+		NetLog.error("invalid packet type",{"type":get_type()})
 		return false
 
 	return true

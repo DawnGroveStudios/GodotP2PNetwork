@@ -16,7 +16,7 @@ func _ready():
 	thread_cleaner.timeout.connect(_clean_threads)
 	add_child(thread_cleaner)
 	thread_cleaner.start()
-	GodotLogger.info("starting thread cleaner thread",{"left":_running_threads.size()})
+	NetLog.info("starting thread cleaner thread",{"left":_running_threads.size()})
 
 static func wait_for_threads(threads:Array[Thread]):
 	for t in threads:
@@ -26,7 +26,7 @@ static func wait_for_threads(threads:Array[Thread]):
 
 func run(callable:Callable) ->bool:
 	if _running_threads.size() >= _max_threads:
-		GodotLogger.warn("too many threads running",{"max":_max_threads,"running":_running_threads.size()})
+		NetLog.warn("too many threads running",{"max":_max_threads,"running":_running_threads.size()})
 		return false
 	var t = Thread.new()
 	t.start(callable)

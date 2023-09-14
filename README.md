@@ -11,10 +11,6 @@ We Plan to support
 
 
 ## Plugins
-### Required
-- GodotLogger
-	- [Github](https://github.com/DawnGroveStudios/GodotLogger)
-	- [AssetStore]()
 
 ### Optional - Highly recommend since this is the only working Networking layer currently
 - Steam

@@ -33,6 +33,6 @@ func _on_match_list(lobbies:Array[LobbyData]):
 
 
 func on_item_selected(index:int):
-	GodotLogger.debug("selected item",{"index":index,"data":_lobbies[index]})
+	NetLog.debug("selected item",{"index":index,"data":_lobbies[index]})
 	P2PLobby.join_lobby(_lobbies[index].lobby_id)
 	pass

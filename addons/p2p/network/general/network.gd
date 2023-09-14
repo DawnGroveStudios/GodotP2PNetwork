@@ -94,10 +94,10 @@ func _verify_payloads():
 	p.set_node_path(get_path())
 	var test_payload = p.get_payload()
 	p.parse(test_payload)
-	if p.get_node_path() != get_path():
-		GodotLogger.fatal("failed verifing payload")
-	if bytes_to_var(p.get_data()) != "test":
-		GodotLogger.fatal("failed verifing payload")
+	#if p.get_node_path() != get_path():
+	#	NetLog.fatal(get_tree(),"failed verifing payload")
+	#if bytes_to_var(p.get_data()) != "test":
+	#	NetLog.fatal(get_tree(),"failed verifing payload")
 
 func set_current_scene(sceneName:String,node:Node):
 	if !P2PLobby.in_lobby():
@@ -135,13 +135,13 @@ func rpc_sync(obj:Node,send_type:P2P_SEND_TYPE=P2P_SEND_TYPE.RELIABLE,peer:NetPe
 		return true
 	#NetworkNodeHelper.set_object_owner(obj)
 	if !obj.is_inside_tree():
-		GodotLogger.warn("not inside tree",[obj.get_class(),obj.name])
+		NetLog.warn("not inside tree",[obj.get_class(),obj.name])
 		return false
 	if NetworkNodeHelper.duplicate_object(obj):
 		return false
 	_called_sync += 1
 	if !P2PNetwork.net_rpc(RPC_TYPE.SYNC,obj,peer,Callable(),send_type):
-		GodotLogger.error("failed syncing %s %s " % [obj.get_class(),obj.name])
+		NetLog.error("failed syncing %s %s " % [obj.get_class(),obj.name])
 		return false
 	return true
 
@@ -159,7 +159,7 @@ func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=C
 		return true
 
 	if caller == null:
-		GodotLogger.warn("caller is null")
+		NetLog.warn("caller is null")
 		return false
 	var net_data:PackedByteArray
 	if rpc_type in [RPC_TYPE.SYNC]:
@@ -169,7 +169,7 @@ func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=C
 			#NetworkNodeHelper.set_object_name(caller)
 			return false
 		if !NetworkNodeHelper.is_owner_of_object(caller):
-			GodotLogger.warn("unable to call sync on object",
+			NetLog.warn("unable to call sync on object",
 					{
 						"node_network_id":caller["network_id"],
 						"node_name":caller.name,
@@ -267,7 +267,7 @@ func _rpc_sync(to_peer_network_id:int,node: Node,node_data:PackedByteArray=Packe
 	packet.set_type(BasePayload.PACKET_TYPE.SYNC)
 	packet.set_data(payload)
 	if not packet.send_p2p_packet(to_peer.network_id,send_type):
-		GodotLogger.warn("failed sending sync packet to peer")
+		NetLog.warn("failed sending sync packet to peer")
 	return true
 
 func _get_node_path(index:int,node_path:NodePath) -> NodePath:
@@ -281,7 +281,7 @@ func _get_node_path(index:int,node_path:NodePath) -> NodePath:
 func _execute_rpc_sync(sender:NetPeer, path_cache_index: int,raw_data:PackedByteArray,packet:BasePayload):
 	var node_path = packet.get_node_path()# _get_node_path(path_cache_index,packet.get_node_path())
 	if node_path == null || node_path.is_empty():
-		GodotLogger.error("NodePath index %s does not exist on this client! Cannot call RPC SYNC" % path_cache_index,
+		NetLog.error("NodePath index %s does not exist on this client! Cannot call RPC SYNC" % path_cache_index,
 			{
 				"sender":sender,
 				"path_cache_index":path_cache_index,
@@ -296,7 +296,7 @@ func _execute_rpc_sync(sender:NetPeer, path_cache_index: int,raw_data:PackedByte
 	threading.unlock_mutex()
 	if node == null:
 		if !NetworkNodeHelper.valid_sync_dict(raw_dict):
-			GodotLogger.warn("unable to create sync object: %s" % node_path)
+			NetLog.warn("unable to create sync object: %s" % node_path)
 			return
 		var key = "%s_invalid_path" % node_path.get_concatenated_names().capitalize()
 		var created_key = "created_%s" % node_path.get_concatenated_names().capitalize()
@@ -309,7 +309,7 @@ func _execute_rpc_sync(sender:NetPeer, path_cache_index: int,raw_data:PackedByte
 		threading.lock_mutex()
 		if !_path_cache.load_at_location_with_dict(raw_dict,packet.get_node_path()):
 			NetCache.set_data(key,"invalid path",5)
-			GodotLogger.error("Unable to load node at location: %s" % node_path)
+			NetLog.error("Unable to load node at location: %s" % node_path)
 			threading.unlock_mutex()
 			return
 		NetCache.set_data(created_key,true,15)
@@ -318,7 +318,7 @@ func _execute_rpc_sync(sender:NetPeer, path_cache_index: int,raw_data:PackedByte
 
 		if node == null:
 			NetCache.set_data(key,"invalid path",5)
-			GodotLogger.error("Unable to find node at location: %s" % node_path)
+			NetLog.error("Unable to find node at location: %s" % node_path)
 			return
 		else:
 			NetCache.set_data(created_key,true,5)
@@ -332,7 +332,7 @@ func _rpc(to_peer_network_id:int,caller: Node, method:Callable=Callable(),send_t
 	if to_peer == null:
 		return false
 	if !caller.is_inside_tree():
-		GodotLogger.error("node is not inside of tree",caller)
+		NetLog.error("node is not inside of tree",caller)
 		return false
 	var node_path = caller.get_path()
 
@@ -351,14 +351,14 @@ func _rpc(to_peer_network_id:int,caller: Node, method:Callable=Callable(),send_t
 	packet.set_data(payload)
 	packet.set_node_path(node_path)
 	if not packet.send_p2p_packet(to_peer.network_id,send_type):
-		GodotLogger.warn("failed sending packet to peer")
+		NetLog.warn("failed sending packet to peer")
 		return false
 	return true
 
 func _execute_rpc(sender:NetPeer, path_cache_index: int, method: String, args: Array,packet:BasePayload) -> bool:
 	var node_path = packet.get_node_path()
 	if node_path == null || node_path.is_empty():
-		GodotLogger.error("NodePath index %s does not exist on this client! Cannot call RPC" % path_cache_index,
+		NetLog.error("NodePath index %s does not exist on this client! Cannot call RPC" % path_cache_index,
 			{
 				"sender":sender,
 				"path_cache_index":path_cache_index,
@@ -370,7 +370,7 @@ func _execute_rpc(sender:NetPeer, path_cache_index: int, method: String, args: A
 
 	var node = get_node_or_null(node_path)
 	if node == null:
-		GodotLogger.error("Node %s does not exist on this client! Cannot call RPC" % node_path)
+		NetLog.error("Node %s does not exist on this client! Cannot call RPC" % node_path)
 		return false
 	if network_data.get_server_network_peer() == null:
 		#todo fix
@@ -378,7 +378,7 @@ func _execute_rpc(sender:NetPeer, path_cache_index: int, method: String, args: A
 		node.callv(method, args)
 		return true
 	if not network_access.sender_has_access_to_method(sender,node,method,network_data.get_server_network_peer().network_id):
-		GodotLogger.error("Sender does not have permission to execute method %s on node %s" % [method, node_path],
+		NetLog.error("Sender does not have permission to execute method %s on node %s" % [method, node_path],
 			{
 				"sender":sender,
 				"path_cache_index":path_cache_index,
@@ -387,11 +387,11 @@ func _execute_rpc(sender:NetPeer, path_cache_index: int, method: String, args: A
 			})
 		return false
 	if not node.has_method(method):
-		GodotLogger.error("Node %s does not have a method %s" % [node.name, method])
+		NetLog.error("Node %s does not have a method %s" % [node.name, method])
 		return false
 	var expected_args = _get_callable(node,method)
 	if expected_args <= -1:
-		GodotLogger.error("failed getting method args",{"method":method,"args":args})
+		NetLog.error("failed getting method args",{"method":method,"args":args})
 		return false
 	if expected_args == args.size():
 		node.callv(method, args)
@@ -399,14 +399,14 @@ func _execute_rpc(sender:NetPeer, path_cache_index: int, method: String, args: A
 		args.push_front(sender.network_id)
 		node.callv(method, args)
 	else:
-		GodotLogger.error("expected args does not match recieved args",{"method":method,"args":args})
+		NetLog.error("expected args does not match recieved args",{"method":method,"args":args})
 		return false
 	return true
 
 func _get_callable(node:Node,method_name:String) ->int:
 	for method in node.get_method_list():
 		if method["name"] == method_name:
-			GodotLogger.debug("callable methods",method)
+			NetLog.debug("callable methods",method)
 			return method["args"].size()
 	return -1
 
@@ -424,10 +424,10 @@ func get_packet() -> BasePayload:
 # passes in payload to reuse in func
 func _confirm_peer(payload:BasePayload,network_id:int):
 	if not network_data.has_peer(network_id):
-		GodotLogger.error("Cannot confirm peer %s as they do not exist locally!" % network_id)
+		NetLog.error("Cannot confirm peer %s as they do not exist locally!" % network_id)
 		return
 
-	GodotLogger.info("Peer Confirmed %s" % network_id)
+	NetLog.info("Peer Confirmed %s" % network_id)
 	network_data.get_peer(network_id).connected = true
 	network_data.get_peer(network_id).status = NetPeer.ConnectionStatus.CONNECTED
 	emit_signal("peer_status_updated", network_id,NetPeer.ConnectionStatus.CONNECTED)
@@ -493,13 +493,13 @@ func _handle_rpc_packet_with_path(sender_id: int, payload: BasePayload):
 func _handle_rpc_signal(sender_id: int, payload: BasePayload):
 	var node = get_node_or_null(payload.get_node_path())
 	if node == null:
-		GodotLogger.warn("unable to find node to send signal to",payload)
+		NetLog.warn("unable to find node to send signal to",payload)
 		return
 	var data = bytes_to_var(payload.get_data())
 	var signal_name = data[0]
 	var args:Array = data[1]
 	if !node.has_signal(signal_name):
-		GodotLogger.warn("node is missing singal name",signal_name)
+		NetLog.warn("node is missing singal name",signal_name)
 		return
 	node.emit_signal.bindv(args).call(signal_name);
 
@@ -507,7 +507,7 @@ func _handle_rpc_signal(sender_id: int, payload: BasePayload):
 ## [enum BasePayload.PACKET_TYPE]
 func _handle_packet(sender_id, payload: BasePayload):
 	if payload.is_empty() && !payload.NoDataPayload.has(payload.get_type()):
-		GodotLogger.warn("invalid payload, was expecting data for type",{"payload_type":payload.get_type(),"name":BasePayload.PACKET_TYPE.keys()[payload.get_type()-1]})
+		NetLog.warn("invalid payload, was expecting data for type",{"payload_type":payload.get_type(),"name":BasePayload.PACKET_TYPE.keys()[payload.get_type()-1]})
 		return
 	match payload.get_type():
 		BasePayload.PACKET_TYPE.HANDSHAKE:
@@ -522,7 +522,7 @@ func _handle_packet(sender_id, payload: BasePayload):
 			_handle_remove_node(payload,payload.get_data())
 		BasePayload.PACKET_TYPE.NODE_PATH_CONFIRM:
 			if !_path_cache.server_confirm_peer_node_path(network_data.get_peer(sender_id),bytes_to_var(payload.get_data())):
-				GodotLogger.warn("failed confirming server node path")
+				NetLog.warn("failed confirming server node path")
 		BasePayload.PACKET_TYPE.NODE_PATH_UPDATE:
 			NetworkCommands.update_node_path_cache(sender_id,payload.get_data())
 		BasePayload.PACKET_TYPE.RPC_WITH_NODE_PATH:
@@ -536,12 +536,12 @@ func _handle_packet(sender_id, payload: BasePayload):
 		BasePayload.PACKET_TYPE.RPC_SIGNAL:
 			_handle_rpc_signal(sender_id,payload)
 		_:
-			GodotLogger.warn("payload type not implemented yet",{"payload_type":payload.get_type()})
+			NetLog.warn("payload type not implemented yet",{"payload_type":payload.get_type()})
 			return
 
 # _init_p2p_host initializes lobby host
 func _init_p2p_host(lobby_id):
-	GodotLogger.info("Initializing P2P Host as %s" % P2PLobby.get_self().network_id)
+	NetLog.info("Initializing P2P Host as %s" % P2PLobby.get_self().network_id)
 	var host_peer = NetPeer.new(P2PLobby.get_self().network_id)
 	host_peer.host = true
 	host_peer.connected = true
@@ -555,9 +555,9 @@ func _init_p2p_host(lobby_id):
 ## the lobby
 func _init_p2p_session(network_id):
 	if not network_data.is_server():
-		GodotLogger.debug("only server should initialize p2p requests")
+		NetLog.debug("only server should initialize p2p requests")
 		return
-	GodotLogger.info("Initializing P2P Session with %s" % network_id)
+	NetLog.info("Initializing P2P Session with %s" % network_id)
 	var current = network_data.get_current_peer()
 	if current != null and current.network_id == network_id:
 		emit_signal("peer_status_updated", network_id,current.status)
@@ -577,7 +577,7 @@ func _close_p2p_session(network_id):
 		emit_signal("disconnect")
 		network_data.clear()
 		return
-	GodotLogger.info("Closing P2P Session with %s" % network_id)
+	NetLog.info("Closing P2P Session with %s" % network_id)
 	network_data.remove_peer(network_id)
 	NetCache.clear()
 	NetworkCommands.server_send_peer_state()

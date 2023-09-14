@@ -37,7 +37,7 @@ func get_id() -> int:
 func create_lobby(lb:LobbyData) ->bool:
 	if in_lobby():
 		return false
-	GodotLogger.info("Trying to create lobby of type %s" % lb.visablity)
+	NetLog.info("Trying to create lobby of type %s" % lb.visablity)
 	_current_lobby = lb
 	return true
 
@@ -51,7 +51,7 @@ func join_lobby(lobby_id: int) ->bool:
 
 func leave_lobby():
 	if in_lobby():
-		GodotLogger.info("Leaving Lobby %s" % get_lobby_id())
+		NetLog.info("Leaving Lobby %s" % get_lobby_id())
 		_current_lobby = null
 	return
 

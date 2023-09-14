@@ -10,7 +10,7 @@ static func send_p2p_command_packet(network_id:int, packet_type: int, arg = null
 	payload.set_type(packet_type)
 	payload.set_data(arg)
 	if not payload.send_p2p_packet(network_id):
-		GodotLogger.error("Failed to send command packet %s" % packet_type)
+		NetLog.error("Failed to send command packet %s" % packet_type)
 		return false
 	return true
 
@@ -25,7 +25,7 @@ static func send_p2p_signal_packet(obj:Node,signalName:String, arg = null,networ
 	payload.set_data([signalName,arg])
 	if network_id > -1:
 		if not payload.send_p2p_packet(network_id):
-			GodotLogger.error("Failed to send signal packet :%s" % signalName,arg)
+			NetLog.error("Failed to send signal packet :%s" % signalName,arg)
 			return false
 		return true
 	payload.broadcast_p2p_packet(P2PLobby.get_self().network_id,P2PNetwork.network_data.get_peer_network_ids())
@@ -60,7 +60,7 @@ static func server_update_node_path_cache(payload:BasePayload,peer_id: int, node
 	payload.set_data([path_cache_index, node_path])
 	payload.set_node_path(node_path)
 	if not payload.send_p2p_packet(peer_id):
-		GodotLogger.error("failed updating node path cache")
+		NetLog.error("failed updating node path cache")
 
 
 
@@ -69,10 +69,10 @@ static func server_send_peer_state():
 		return
 	if not P2PNetwork.network_data.is_server():
 		return
-	GodotLogger.info("Sending Peer State",P2PNetwork.network_data)
+	NetLog.info("Sending Peer State",P2PNetwork.network_data)
 	var peers = []
 	for peer_id in P2PNetwork.network_data.get_peer_network_ids():
-		GodotLogger.info("Peer",{"id":peer_id})
+		NetLog.info("Peer",{"id":peer_id})
 		peers.append(JsonData.marshal(P2PNetwork.network_data.get_peer(peer_id)))
 
 	var payload = P2PNetwork.get_packet()
@@ -97,7 +97,7 @@ static func set_connection_state(state:NetPeer.ConnectionStatus) ->bool:
 		return false
 	current.status = state
 	P2PLobby.send_message("[SYSTEM][%s set status to: %s]" % [current.profile_name,NetPeer.ConnectionStatus.keys()[current.status]])
-	GodotLogger.info("Sending Peer State Client",current)
+	NetLog.info("Sending Peer State Client",current)
 	var payload = P2PNetwork.get_packet()
 	payload.set_type(BasePayload.PACKET_TYPE.CLIENT_PEER_STATE)
 	payload.set_data(JsonData.to_dict(current,false))

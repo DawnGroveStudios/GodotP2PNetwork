@@ -80,7 +80,7 @@ func remove_peer(network_id:int):
 	if server_network_peer == null:
 		return
 	if server_network_peer.network_id == network_id:
-		GodotLogger.warn("lost connection to server: %d" % network_id)
+		NetLog.warn("lost connection to server: %d" % network_id)
 		server_network_peer = null
 		P2PLobby.leave_lobby()
 
@@ -106,14 +106,14 @@ func peers_connected() -> bool:
 
 func get_connected_peer(network_id:int) ->NetPeer:
 	if !_current_peer.connected:
-		GodotLogger.warn("Cannot send an RPC when not connected to a network")
+		NetLog.warn("Cannot send an RPC when not connected to a network")
 		return
 	var to_peer = get_peer(network_id)
 	if to_peer == null:
-		GodotLogger.warn("Cannot send an RPC to a null peer. Check youre completed connected to the network first")
+		NetLog.warn("Cannot send an RPC to a null peer. Check youre completed connected to the network first")
 		return
 
 	if not is_peer_connected(to_peer.network_id):
-		GodotLogger.warn("Cannot send an RPC to someone who is not connected to the network!")
+		NetLog.warn("Cannot send an RPC to someone who is not connected to the network!")
 		return
 	return to_peer

@@ -1,7 +1,7 @@
 @tool
 extends Node
 
-class_name Log
+class_name NetLog
 
 enum LogLevel {
 	DEBUG,
@@ -11,19 +11,16 @@ enum LogLevel {
 	FATAL,
 }
 
-var CURRENT_LOG_LEVEL=LogLevel.INFO
-var write_logs:bool = false
-var log_path:String = "res://game.log"
+static var CURRENT_LOG_LEVEL=LogLevel.INFO
+static var write_logs:bool = false
+static var log_path:String = "res://game.log"
 var _config
 
 var _prefix=""
 var _default_args={}
 
-var _file
+static var _file
 
-func _ready():
-	_set_loglevel(Config.get_var("log-level","debug"))
-	
 func _set_loglevel(level:String):
 	logger("setting log level",{"level":level},LogLevel.INFO)
 	match level.to_lower():
@@ -38,30 +35,22 @@ func _set_loglevel(level:String):
 		"fatal":
 			CURRENT_LOG_LEVEL = LogLevel.FATAL
 
-func with(prefix:String="",args:Dictionary={}) ->Log :
-	var l = Log.new()
-	l.CURRENT_LOG_LEVEL = self.CURRENT_LOG_LEVEL
-	l._prefix = prefix
-	for k in args:
-		l._default_args[k] = args[k]
-	return l
-
-func logger(message:String,values,log_level=LogLevel.INFO):
+static func logger(message:String,values,log_level=LogLevel.INFO,tree:SceneTree=null):
 	if CURRENT_LOG_LEVEL > log_level :
 		return
 	var log_msg_format = "{level} [{time}]{prefix} {message} "
 
 	var now = Time.get_datetime_dict_from_system(true)
-	
+
 	var msg = log_msg_format.format(
 		{
-			"prefix":_prefix,
+			"prefix":"",
 			"message":message,
 			"time":"{day}/{month}/{year} {hour}:{minute}:{second}".format(now),
 			"level":LogLevel.keys()[log_level]
 		})
-	
-	
+
+
 	match typeof(values):
 		TYPE_ARRAY:
 			if values.size() > 0:
@@ -70,8 +59,6 @@ func logger(message:String,values,log_level=LogLevel.INFO):
 					msg += "{k}".format({"k":k})
 				msg = msg.left(msg.length()-1)+"}"
 		TYPE_DICTIONARY:
-			for k in _default_args:
-				values[k] = _default_args[k]
 			if values.size() > 0:
 				msg += "{"
 				for k in values:
@@ -87,7 +74,7 @@ func logger(message:String,values,log_level=LogLevel.INFO):
 		TYPE_OBJECT:
 			if values == null:
 				return
-			
+
 			msg += JSON.stringify(JsonData.to_dict(values,false))
 		_:
 			msg += values
@@ -109,38 +96,37 @@ func logger(message:String,values,log_level=LogLevel.INFO):
 			push_error(msg)
 			printerr(msg)
 			print_stack()
-			print_tree()
+
 		LogLevel.FATAL:
 			push_error(msg)
 			printerr(msg)
 			print_stack()
-			print_tree()
-			get_tree().quit()
+			if tree != null:
+				tree.quit()
 		_:
 			print(msg)
-			
-func debug(message:String,values={}):
-	call_thread_safe("logger",message,values,LogLevel.DEBUG)
 
-func info(message:String,values={}):
-	call_thread_safe("logger",message,values)
+static func debug(message:String,values={}):
+	logger(message,values,LogLevel.DEBUG)
 
-func warn(message:String,values={}):
-	call_thread_safe("logger",message,values,LogLevel.WARN)
+static func warn(message:String,values={}):
+	logger(message,values,LogLevel.WARN)
 
-func error(message:String,values={}):
-	call_thread_safe("logger",message,values,LogLevel.ERROR)
+static func error(message:String,values={}):
+	logger(message,values,LogLevel.ERROR)
 
-func fatal(message:String,values={}):
-	call_thread_safe("logger",message,values,LogLevel.FATAL)
-	
+static func fatal(tree:SceneTree,message:String,values={}):
+	logger(message,values,LogLevel.FATAL,tree)
 
-func _write_logs(message:String):
+static func info(message:String,values={}):
+	logger(message,values)
+
+static func _write_logs(message:String):
 	if !write_logs:
 		return
 	if _file == null:
 		_file = FileAccess.open(log_path,FileAccess.WRITE)
 	_file.store_line(message)
 	pass
-	
+
 

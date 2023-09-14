@@ -1,21 +1,28 @@
 extends BasePayload
 
 class_name SteamPayload
+var SteamClient
 
+func _init() -> void:
+	super()
+	if Engine.has_singleton("Steam"):
+		SteamClient = Engine.get_singleton("Steam")
+	else:
+		return
 
 func clone() -> BasePayload:
 	return SteamPayload.new()
 
 
 func send_p2p_packet(
-	my_network_id, send_type: int = Steam.P2P_SEND_RELIABLE, channel: int = 0
+	my_network_id, send_type: int = BaseNetwork.P2P_SEND_TYPE.RELIABLE, channel: int = 0
 ) -> bool:
 	if get_type() < 0:
-		GodotLogger.error("invalid packet type", {"type": get_type()})
+		NetLog.error("invalid packet type", {"type": get_type()})
 		return false
-	var succeces = Steam.sendP2PPacket(my_network_id, get_payload(), send_type, channel)
-	if succeces:
+	var success = SteamClient.sendP2PPacket(my_network_id, get_payload(), send_type, channel)
+	if success:
 		return true
-	elif send_type != Steam.P2P_SEND_RELIABLE:
+	elif send_type != BaseNetwork.P2P_SEND_TYPE.RELIABLE:
 		return true
 	return false

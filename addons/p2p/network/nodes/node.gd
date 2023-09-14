@@ -69,7 +69,7 @@ func sync():
 	if !NetworkNodeHelper.is_owner_of_object(self):
 		return
 	if !P2PNetwork.net_rpc(P2PNetwork.RPC_TYPE.SYNC,self):
-		GodotLogger.error("failed syncing %s %s " % [self.get_class(),self.name])
+		NetLog.error("failed syncing %s %s " % [self.get_class(),self.name])
 		sync_success = false
 	else:
 		sync_success = true

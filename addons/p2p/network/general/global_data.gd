@@ -40,7 +40,7 @@ func _peer_status(network_id:int,status:NetPeer.ConnectionStatus):
 	if P2PNetwork.network_data.get_peer_network_ids().size() <= 2:
 		return
 	if !P2PNetwork.net_rpc(P2PNetwork.RPC_TYPE.CLIENT,self,P2PNetwork.network_data.get_peer(network_id),_network_init.bind(game_data,player_data)):
-		GodotLogger.error("failed to sync global game data with client")
+		NetLog.error("failed to sync global game data with client")
 
 
 func player_left(network_id:int):

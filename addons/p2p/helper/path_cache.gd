@@ -98,7 +98,7 @@ func load_at_location_with_dict(data:Dictionary,node_path:NodePath) ->bool:
 	var parent_path = get_parent_path(node_path)
 	var parent_node = get_node_or_null(parent_path)
 	if parent_node == null:
-		GodotLogger.error("failed to get parent node %s base node path %s" % [parent_path,node_path])
+		NetLog.error("failed to get parent node %s base node path %s" % [parent_path,node_path])
 		return false
 	var obj
 	if str(data["scene_file_path"]).contains(".gd"):
@@ -108,7 +108,7 @@ func load_at_location_with_dict(data:Dictionary,node_path:NodePath) ->bool:
 	if obj == null:
 		return false
 	if !JsonData.unmarshal(data,obj):
-		GodotLogger.error("failed unmarshalling obj to sync node")
+		NetLog.error("failed unmarshalling obj to sync node")
 		return false
 
 	_created_object += 1
@@ -118,7 +118,7 @@ func load_at_location_with_dict(data:Dictionary,node_path:NodePath) ->bool:
 	for c in parent_node.get_children(true):
 		if c.name == obj.name:
 			if duplicate:
-				GodotLogger.info("[CLEAN]found duplicate object:remove:",obj)
+				NetLog.info("[CLEAN]found duplicate object:remove:",obj)
 			duplicate = true
 	return true
 

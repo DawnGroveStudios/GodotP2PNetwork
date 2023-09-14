@@ -65,11 +65,11 @@ func set_meta_value(key:String,value):
 	meta[key] = value
 
 func get_member(id:int) ->NetPeer:
-	GodotLogger.info("base lobby data: get_member")
+	NetLog.info("base lobby data: get_member")
 	return _members.get(id)
 
 func update_lobby_members():
-	GodotLogger.info("base lobby data: update_lobby_members")
+	NetLog.info("base lobby data: update_lobby_members")
 	pass
 
 func set_lobby_owner(member:NetPeer)->bool:

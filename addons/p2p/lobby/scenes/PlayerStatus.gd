@@ -27,7 +27,7 @@ func toggle():
 			connection_state = NetPeer.ConnectionStatus.CONNECTED
 	NetworkCommands.set_connection_state(connection_state)
 
-func _left_lobby(steam_id:int):
+func _left_lobby(network_id:int):
 	_set_state(NetPeer.ConnectionStatus.DISCONNECTED)
 
 func _peer_status_updated(network_id:int,status:NetPeer.ConnectionStatus):

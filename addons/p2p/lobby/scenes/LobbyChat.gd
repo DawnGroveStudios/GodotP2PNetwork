@@ -65,7 +65,7 @@ func _command(cmd: String,args:Array=[]):
 		"GROUP":
 			_set_group(args[0])
 		_:
-			GodotLogger.warn("unknown cmd")
+			NetLog.warn("unknown cmd")
 
 
 func _set_group(cmd:String):
@@ -82,23 +82,6 @@ func text_entered(text):
 		inputField.text = ''
 		return
 	if text != '':
-		#add_message(P2P.get_lobby_member(SteamLobby._my_steam_id), text, group_index)
-		# Here you have to send the message to the server
-		#print(text)
 		P2PLobby.send_message(text)
 		inputField.text = ''
-
-
-#@tool
-#extends TextEdit
-
-#func _ready():
-#	placeholder_text = "Steam Chat..."
-
-#func _input(event):
-#	if event.is_action_pressed("ui_text_newline") && text.length() > 0:
-#		var success = SteamLobby.send_chat_message(text.rstrip("\n"))
-#		if !success:
-#		else:
-#			text = ""
 

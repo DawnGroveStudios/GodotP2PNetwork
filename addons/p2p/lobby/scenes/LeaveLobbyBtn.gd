@@ -14,7 +14,7 @@ func _ready():
 func _joined_lobby(id:int):
 	disabled = false
 
-func _left_lobby(steam_id:int):
+func _left_lobby(network_id:int):
 	disabled = true
 
 func _peer_status_updated(network_id:int,status):

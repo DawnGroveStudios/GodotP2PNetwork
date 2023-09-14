@@ -41,7 +41,7 @@ func add_data(key:String,data,expires:int=default_expiration_sec) ->bool:
 
 func set_data(key,data,expires:int=default_expiration_sec) ->bool:
 	if _cache.size() > max_items_in_cache:
-		GodotLogger.warn("failed inserting into cache, too many items",
+		NetLog.warn("failed inserting into cache, too many items",
 		{
 			"key":key,
 			"cache_size":_cache.size()
