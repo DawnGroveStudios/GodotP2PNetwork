@@ -8,8 +8,7 @@ var loadSingletonPlugin = {
 	"P2PNetwork" : "res://addons/p2p/network/general/network.gd",
 	"P2PLobby": "res://addons/p2p/lobby/general/lobby.gd",
 }
-
-var config:p2pConfig = p2pConfig.new()
+var config
 var config_panel_instance
 var loadScenePlugin = {
 	"Button":[
@@ -70,7 +69,9 @@ func _enter_tree():
 	config_panel_instance = ConfigMenu.instantiate()
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, config_panel_instance)
 	config_panel_instance.select.connect(refresh)
-	config.Load()
+	config = p2pConfig.new()
+	if config != null:
+		config.Load()
 	loadSingletonPlugin[config.p2pNetworkName] = config.GetNetwork()
 	loadSingletonPlugin[config.p2pLobbyName] = config.GetNetworkLobby()
 	for names in loadSingletonPlugin.keys():
@@ -83,7 +84,9 @@ func _enter_tree():
 			add_custom_type("%s%s" % [scene_prefix,obj["Name"]],t,obj["Path"],obj["Icon"])
 
 func refresh():
-	config.Load()
+	config = p2pConfig.new()
+	if config != null:
+		config.Load()
 	loadSingletonPlugin[config.p2pNetworkName] = config.GetNetwork()
 	loadSingletonPlugin[config.p2pLobbyName] = config.GetNetworkLobby()
 	for names in loadSingletonPlugin.keys():

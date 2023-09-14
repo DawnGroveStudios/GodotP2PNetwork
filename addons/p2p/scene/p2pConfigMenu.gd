@@ -3,10 +3,12 @@ extends Control
 
 signal select
 
-var config:p2pConfig = p2pConfig.new()
+var config
 
 func _ready():
-	config.Load()
+	config = p2pConfig.new()
+	if config != null:
+		config.Load()
 	var selected = 0
 	var index = 0
 	for k in config.p2pNetworkPathOptions.keys():
@@ -30,5 +32,6 @@ func _on_options_item_selected(index):
 	var valid = config.SelectPath(config.p2pNetworkPathOptions.keys()[index])
 	if !valid:
 		return
-	config.Save()
+	if config != null:
+		config.Save()
 	refresh()
