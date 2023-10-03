@@ -3,15 +3,7 @@ extends CharacterBody2D
 class_name P2PCharacterBody2D
 var network_id:int=-1
 var sync_success:bool
-#var whitelist_force:Array[String] = [
-#	"velocity",
-#	"motion_mode",
-#	"rotation",
-#	"position",
-#	"global_position",
-#	"global_rotation",
-#	"global_rotation_degrees",
-#	]
+
 @export var enable_network_sync:bool=true
 @export var sync_priority:P2PNetwork.SYNC_PRIORITY = P2PNetwork.SYNC_PRIORITY.LOW
 var is_owner

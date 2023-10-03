@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/p2p/scene/p2pConfigMenu.gd" id="1_niu2a"]
 
-[node name="p2pConfigMenu" type="HBoxContainer"]
+[node name="config_menu" type="HBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,5 +14,13 @@ script = ExtResource("1_niu2a")
 layout_mode = 2
 tooltip_text = "Select P2P Network Type"
 flat = true
+item_count = 3
+selected = 1
+popup/item_0/text = "P2P Mode: Base"
+popup/item_0/id = 0
+popup/item_1/text = "P2P Mode: Steam"
+popup/item_1/id = 1
+popup/item_2/text = "P2P Mode: Proxy"
+popup/item_2/id = 2
 
 [connection signal="item_selected" from="options" to="." method="_on_options_item_selected"]
