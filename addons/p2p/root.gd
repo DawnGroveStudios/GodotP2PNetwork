@@ -2,7 +2,6 @@
 extends EditorPlugin
 const scene_prefix="P2P_"
 
-const ConfigMenu = preload("res://addons/p2p/scene/p2pConfigMenu.tscn")
 var loadSingletonPlugin = {
 	"NetCache":"res://addons/p2p/helper/cache.gd",
 	"P2PNetwork" : "res://addons/p2p/network/general/network.gd",
@@ -48,13 +47,6 @@ var loadScenePlugin = {
 			"Icon":get_editor_interface().get_base_control().get_theme_icon("ItemList")
 		}
 	],
-	"Node":[
-		{
-			"Name":"NodeTest",
-			"Path": preload("res://addons/p2p/network/nodes/test_node.gd"),
-			"Icon":get_editor_interface().get_base_control().get_theme_icon("Node")
-		}
-		],
 	"HBoxContainer":[
 		{
 			"Name":"Profiles",
@@ -66,10 +58,11 @@ var loadScenePlugin = {
 }
 
 func _enter_tree():
-	config_panel_instance = ConfigMenu.instantiate()
+	config_panel_instance = preload("scene/p2pConfigMenu.tscn").instantiate()
+	config_panel_instance.set_name("config_menu")
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, config_panel_instance)
 	config_panel_instance.select.connect(refresh)
-	config = p2pConfig.new()
+	config = preload("res://addons/p2p/config.gd").new()
 	if config != null:
 		config.Load()
 	loadSingletonPlugin[config.p2pNetworkName] = config.GetNetwork()
@@ -84,7 +77,7 @@ func _enter_tree():
 			add_custom_type("%s%s" % [scene_prefix,obj["Name"]],t,obj["Path"],obj["Icon"])
 
 func refresh():
-	config = p2pConfig.new()
+	config = preload("res://addons/p2p/config.gd").new()
 	if config != null:
 		config.Load()
 	loadSingletonPlugin[config.p2pNetworkName] = config.GetNetwork()
@@ -98,7 +91,9 @@ func refresh():
 
 func _exit_tree():
 	if config_panel_instance:
+		remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, config_panel_instance)
 		config_panel_instance.queue_free()
+
 	for names in loadSingletonPlugin.keys():
 		print_debug("[p2p] removing singleton %s %s" % [names,loadSingletonPlugin[names]])
 		remove_autoload_singleton(names)
