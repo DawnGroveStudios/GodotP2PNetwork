@@ -5,3 +5,4 @@
 exports/
 .vscode
 **.x86_64
+addons/p2p/config.data
