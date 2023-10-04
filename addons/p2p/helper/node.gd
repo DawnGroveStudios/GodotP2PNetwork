@@ -9,7 +9,6 @@ static func get_parent_path(node_path:NodePath)->NodePath:
 
 
 static func set_object_name(obj:Object,args:Array=[])->bool:
-
 	if !"name" in obj:
 		return false
 
@@ -23,9 +22,10 @@ static func set_object_name(obj:Object,args:Array=[])->bool:
 	var n = invalidChar.sub(obj.name,"",true)
 	var data = [str(P2PNetwork.network_data.get_network_id()),str(obj.get_class()),str(random.randi()),n]
 	data.append_array(args)
-	obj.name = "_".join(data)
-	if !valid_name(obj):
-		obj.set_name.call_deferred("_".join(data))
+	if obj.has_method("set_name"):
+		obj.call_deferred("set_name","_".join(data))
+	else:
+		obj.name = "_".join(data)
 	return true
 
 static func valid_name(obj:Object) -> bool:

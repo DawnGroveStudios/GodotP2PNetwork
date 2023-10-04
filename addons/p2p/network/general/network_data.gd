@@ -40,7 +40,7 @@ func get_network_id() -> int:
 func is_server() -> bool:
 	if !P2PLobby.in_lobby():
 		return true
-	return _current_peer.host || _current_peer == null
+	return _current_peer == null || _current_peer.host
 
 func get_server_network_peer() -> NetPeer:
 	if server_network_peer != null:

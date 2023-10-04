@@ -156,6 +156,10 @@ func rpc_method(method:Callable,rpc_type:RPC_TYPE=RPC_TYPE.ALL, send_type: P2P_S
 # RPC
 func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=Callable(), send_type: P2P_SEND_TYPE = P2P_SEND_TYPE.RELIABLE) -> bool:
 	if !P2PLobby.in_lobby():
+		if rpc_type == RPC_TYPE.ALL_INCLUDING_SELF:
+			if method == null:
+				return false
+			_rpc(network_data.get_network_id(),caller,method,send_type)
 		return true
 
 	if caller == null:
@@ -164,10 +168,12 @@ func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=C
 	var net_data:PackedByteArray
 	if rpc_type in [RPC_TYPE.SYNC]:
 		if !NetworkNodeHelper.valid_sync_object(caller):
+			NetLog.warn("invalid sync object")
 			return false
 		if !NetworkNodeHelper.valid_name(caller):
-			#NetworkNodeHelper.set_object_name(caller)
-			return false
+			if !NetworkNodeHelper.set_object_name(caller):
+				NetLog.warn("invalid object name",caller.name)
+				return false
 		if !NetworkNodeHelper.is_owner_of_object(caller):
 			NetLog.warn("unable to call sync on object",
 					{
@@ -181,6 +187,7 @@ func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=C
 
 	var connected_peers = network_data.get_peers_with_status(NetPeer.ConnectionStatus.CONNECTED,true)
 	if connected_peers.size() == 0:
+		NetLog.warn("no connected peers",caller.name)
 		return false
 
 	match rpc_type:

@@ -32,6 +32,8 @@ func _left_lobby(network_id:int):
 
 func _peer_status_updated(network_id:int,status:NetPeer.ConnectionStatus):
 	var peer = P2PNetwork.network_data.get_current_peer()
+	if peer == null:
+		return
 	_set_state(peer.status)
 
 func _set_state(status:NetPeer.ConnectionStatus):
