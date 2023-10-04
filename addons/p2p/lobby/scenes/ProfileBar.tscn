@@ -11,9 +11,9 @@ metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = 3.0
+offset_left = -70.0
 offset_top = 2.0
-offset_right = 144.0
+offset_right = 71.0
 offset_bottom = 247.0
 metadata/_edit_group_ = true
 metadata/_edit_use_anchors_ = true
