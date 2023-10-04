@@ -7,15 +7,16 @@
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_veitr")
+metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 0
-offset_left = -71.0
-offset_top = -77.0
-offset_right = 70.0
-offset_bottom = 168.0
-metadata/_edit_use_anchors_ = true
+offset_left = -70.0
+offset_top = 2.0
+offset_right = 71.0
+offset_bottom = 247.0
 metadata/_edit_group_ = true
+metadata/_edit_use_anchors_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Panel"]
 position = Vector2(71, 77)

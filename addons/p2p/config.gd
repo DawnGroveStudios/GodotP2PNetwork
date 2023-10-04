@@ -1,6 +1,4 @@
-@tool
-extends Node
-class_name p2pConfig
+#extends Node
 
 const configFilePath = "res://addons/p2p/config.data"
 const p2pNetworkName="P2PNetwork"
