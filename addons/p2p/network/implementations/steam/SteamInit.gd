@@ -13,7 +13,16 @@ func _ready():
 		SteamClient = Engine.get_singleton("Steam")
 	else:
 		return
+	_check_Steam_Running()
 	_initialize_Steam()
+
+func _check_Steam_Running() -> void:
+	while (!Steam.isSteamRunning()):
+		NetLog.info("Steam is not running, starting Steam!")
+		OS.shell_open("steam://")
+		NetLog.info("waiting for Steam to start.")
+		await get_tree().create_timer(3).timeout
+		NetLog.info("checking if Steam is started now.")
 
 
 func _initialize_Steam() -> void:
