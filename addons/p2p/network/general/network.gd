@@ -156,7 +156,7 @@ func rpc_method(method:Callable,rpc_type:RPC_TYPE=RPC_TYPE.ALL, send_type: P2P_S
 # RPC
 func net_rpc(rpc_type:RPC_TYPE, caller:Node,peer:NetPeer=null, method:Callable=Callable(), send_type: P2P_SEND_TYPE = P2P_SEND_TYPE.RELIABLE) -> bool:
 	if !P2PLobby.in_lobby():
-		if 	rpc_type ==	RPC_TYPE.ALL_INCLUDING_SELF:
+		if rpc_type == RPC_TYPE.ALL_INCLUDING_SELF:
 			if method == null:
 				return false
 			_rpc(network_data.get_network_id(),caller,method,send_type)
