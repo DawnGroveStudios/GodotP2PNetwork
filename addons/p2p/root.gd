@@ -40,7 +40,7 @@ var loadScenePlugin = {
 		}
 
 	],
-	"ItemList":[
+	"Panel":[
 		{
 			"Name":"LobbyList",
 			"Path": preload("res://addons/p2p/lobby/scenes/LobbyList.gd"),

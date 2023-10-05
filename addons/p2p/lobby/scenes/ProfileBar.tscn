@@ -4,19 +4,26 @@
 [ext_resource type="Script" path="res://addons/p2p/lobby/scenes/ProfileBar.gd" id="1_veitr"]
 
 [node name="ProfileBar" type="Control"]
+custom_minimum_size = Vector2(150, 250)
 layout_mode = 3
-anchors_preset = 0
+anchor_right = 0.078125
+anchor_bottom = 0.231481
 script = ExtResource("1_veitr")
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.473333
+anchor_top = -0.008
+anchor_right = 0.473333
+anchor_bottom = -0.008
 offset_left = -70.0
 offset_top = 2.0
 offset_right = 71.0
 offset_bottom = 247.0
-metadata/_edit_group_ = true
 metadata/_edit_use_anchors_ = true
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Panel"]
 position = Vector2(71, 77)

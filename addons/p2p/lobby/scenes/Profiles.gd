@@ -1,19 +1,11 @@
 extends HBoxContainer
 
-@export var seperation:int=100
 func _ready():
 	P2PLobby.avatar_loaded.connect(refresh)
 	P2PLobby.lobby_created.connect(refresh)
 	P2PLobby.lobby_joined.connect(refresh)
 	P2PLobby.player_left_lobby.connect(remove)
 	P2PNetwork.peer_status_updated.connect(load_avatars)
-	add_theme_constant_override("separation",seperation)
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 
 func refresh(network_id:int):
 	load_avatars(0,NetPeer.ConnectionStatus.DISCONNECTED)
@@ -40,7 +32,6 @@ func load_avatars(network_id:int,status:NetPeer.ConnectionStatus):
 				peer = P2PLobby._current_lobby._members[peer_id]
 			p.set_peer(peer)
 			p.set_image(P2PLobby._current_lobby._members[peer_id])
-			#p.set_peer(P2PLobby._current_lobby._members[peer_id])
 		add_child(p)
 
 

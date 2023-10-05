@@ -9,7 +9,7 @@ var max_memebers:int = 4
 var min_members:int = 1
 var current_members:int = 0
 var auto_start:int=-1
-var visablity:int=0
+var visablity:P2PLobby.LobbyType=P2PLobby.LobbyType.LOBBY_TYPE_PUBLIC
 
 var meta:Dictionary={}
 
@@ -18,7 +18,7 @@ var _lobby_host:NetPeer
 
 var _members:Dictionary = {}
 
-func _init(id:int,name:String,visablity:int,max_members:int,min_members:int=1,auto_start:int=-1,meta:Dictionary={}):
+func _init(id:int,name:String,visablity:P2PLobby.LobbyType,max_members:int,min_members:int=1,auto_start:int=-1,meta:Dictionary={}):
 	self.lobby_id = id
 	self.lobby_name = name
 	self.max_memebers = max_members
@@ -102,3 +102,17 @@ func get_members() -> Dictionary:
 func string() ->String:
 	#return lobby_name
 	return "[%s] %s \t(%d/%d)" % [lobby_mode,lobby_name,current_members,max_memebers]
+
+func get_lobby_visiblity_str() -> String:
+	match visablity:
+		P2PLobby.LobbyType.LOBBY_TYPE_PUBLIC:
+			return "PUBLIC"
+		P2PLobby.LobbyType.LOBBY_TYPE_INVISIBLE:
+			return "INVISIBLE"
+		P2PLobby.LobbyType.LOBBY_TYPE_PRIVATE:
+			return "PRIVATE"
+		P2PLobby.LobbyType.LOBBY_TYPE_FRIENDS_ONLY:
+			return "FRIENDS"
+	return "UNKNOWN"
+
+
