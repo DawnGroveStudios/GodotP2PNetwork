@@ -397,25 +397,27 @@ func _execute_rpc(sender:NetPeer, path_cache_index: int, method: String, args: A
 		NetLog.error("Node %s does not have a method %s" % [node.name, method])
 		return false
 	var expected_args = _get_callable(node,method)
-	if expected_args <= -1:
+	if expected_args.size() == 0:
 		NetLog.error("failed getting method args",{"method":method,"args":args})
 		return false
-	if expected_args == args.size():
+	if expected_args[0] == args.size():
 		node.callv(method, args)
-	elif expected_args +1 == args.size():
+	elif expected_args[0] + 1 == args.size():
 		args.push_front(sender.network_id)
+		node.callv(method, args)
+	elif expected_args[0] - expected_args[1] < args.size() and args.size() <= expected_args[0]:
 		node.callv(method, args)
 	else:
 		NetLog.error("expected args does not match recieved args",{"method":method,"args":args})
 		return false
 	return true
 
-func _get_callable(node:Node,method_name:String) ->int:
+func _get_callable(node:Node,method_name:String) ->Array[int]:
 	for method in node.get_method_list():
 		if method["name"] == method_name:
 			NetLog.debug("callable methods",method)
-			return method["args"].size()
-	return -1
+			return [method["args"].size(),method["default_args"].size()]
+	return []
 
 func _handle_remove_node(payload:BasePayload,data:PackedByteArray) :
 	var node_path = bytes_to_var(data)

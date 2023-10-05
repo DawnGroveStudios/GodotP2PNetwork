@@ -1,6 +1,35 @@
-[gd_scene load_steps=2 format=3 uid="uid://behdns46wlasf"]
+[gd_scene load_steps=2 format=3 uid="uid://0jhrowksffwj"]
 
-[ext_resource type="Script" path="res://addons/p2p/lobby/scenes/Lobby.gd" id="1_u63qa"]
+[sub_resource type="GDScript" id="GDScript_028an"]
+script/source = "extends Control
+
+class_name LobbyScene
+@export var lobby_id:int = 0
+@export var lobby_name = \"Default Lobby\"
+
+
+func _init(lobby_id:int):
+	self.lobby_id = lobby_id
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	if !is_inside_tree():
+		return
+	$VBoxContainer/HBoxContainer/JoinLobby.pressed.connect(\"join\")
+	pass # Replace with function body.
+
+func set_lobby(lobby:LobbyData):
+	return
+
+func set_title(title:String):
+	$VBoxContainer/Title.text = title
+
+func set_model(model:String):
+	$VBoxContainer/HBoxContainer/Model.text = model
+
+func join():
+	pass
+"
 
 [node name="Lobby" type="Control"]
 layout_mode = 3
@@ -9,7 +38,7 @@ anchor_bottom = 0.1
 offset_right = -0.760052
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_u63qa")
+script = SubResource("GDScript_028an")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1

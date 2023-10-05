@@ -46,10 +46,9 @@ class MethodPermissions:
 	var node_path:NodePath
 	var permission_type:PERMISSION_TYPE
 	var network_id:int
+
 	func _init(n:Node,callable:Callable,permission_type:PERMISSION_TYPE=PERMISSION_TYPE.ANY,network_id:int=0):
-		node_path = n.get_path()
-		c_name = n.get_class()
-		callable.get_object()
+		c_name = callable.get_object().get_class()
 		method_name = callable.get_method()
 		self.permission_type = permission_type
 		self.network_id = network_id
